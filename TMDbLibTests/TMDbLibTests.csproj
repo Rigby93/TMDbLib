@@ -79,6 +79,7 @@
     <Compile Include="ClientGenreTests.cs" />
     <Compile Include="TestClasses\EnumTestStruct.cs" />
     <Compile Include="Helpers\TestMethodsHelper.cs" />
+    <Compile Include="TMDbDateTest.cs" />
     <Compile Include="UtilsTest.cs" />
   </ItemGroup>
   <ItemGroup>
