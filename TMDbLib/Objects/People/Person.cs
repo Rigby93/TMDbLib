@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RestSharp.Deserializers;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 
@@ -9,8 +10,10 @@ namespace TMDbLib.Objects.People
         public bool Adult { get; set; }
         public List<string> AlsoKnownAs { get; set; }
         public string Biography { get; set; }
-        public string Birthday { get; set; }
-        public string Deathday { get; set; }
+        [DeserializeAs(Name = "Birthday")]
+        public string BirthdayString { get; set; }
+        [DeserializeAs(Name = "Deathday")]
+        public string DeathdayString { get; set; }
         public string Homepage { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -20,25 +23,25 @@ namespace TMDbLib.Objects.People
         public ProfileImages Images { get; set; }
         public ChangesContainer Changes { get; set; }
 
-        public TMDbDate BirthDayDate
+        public TMDbDate Birthday
         {
             get
             {
-                if (Birthday == null)
+                if (BirthdayString == null)
                     return null;
 
-                return new TMDbDate(Birthday);
+                return new TMDbDate(BirthdayString);
             }
         }
 
-        public TMDbDate DeathdayDate
+        public TMDbDate Deathday
         {
             get
             {
-                if (Deathday == null)
+                if (DeathdayString == null)
                     return null;
 
-                return new TMDbDate(Deathday);
+                return new TMDbDate(DeathdayString);
             }
         }
     }
