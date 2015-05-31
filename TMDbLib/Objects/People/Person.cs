@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 
 namespace TMDbLib.Objects.People
@@ -9,8 +9,8 @@ namespace TMDbLib.Objects.People
         public bool Adult { get; set; }
         public List<string> AlsoKnownAs { get; set; }
         public string Biography { get; set; }
-		public DateTime? Birthday { get; set; }
-		public DateTime? Deathday { get; set; }
+        public string Birthday { get; set; }
+        public string Deathday { get; set; }
         public string Homepage { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -19,5 +19,27 @@ namespace TMDbLib.Objects.People
         public Credits Credits { get; set; }
         public ProfileImages Images { get; set; }
         public ChangesContainer Changes { get; set; }
+
+        public TMDbDate BirthDayDate
+        {
+            get
+            {
+                if (Birthday == null)
+                    return null;
+
+                return new TMDbDate(Birthday);
+            }
+        }
+
+        public TMDbDate DeathdayDate
+        {
+            get
+            {
+                if (Deathday == null)
+                    return null;
+
+                return new TMDbDate(Deathday);
+            }
+        }
     }
 }
