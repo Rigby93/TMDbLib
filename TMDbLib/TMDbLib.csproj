@@ -45,6 +45,7 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Objects\Search\SearchQueryType.cs" />
     <Compile Include="Objects\Discover\DiscoverBase.cs" />
     <Compile Include="Objects\Discover\DiscoverMovie.cs" />
     <Compile Include="Objects\Discover\DiscoverTv.cs" />
