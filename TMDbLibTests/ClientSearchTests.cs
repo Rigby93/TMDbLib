@@ -189,20 +189,25 @@ namespace TMDbLibTests
 
             Assert.IsNotNull(item);
             Assert.AreEqual(1412, item.Id);
-            Assert.AreEqual("/dXTyVDTIgeByvUOUEiHjbi8xX9A.jpg", item.BackdropPath);
-            Assert.AreEqual(new DateTime(2012, 10, 10), item.FirstAirDate);
-            Assert.AreEqual(MediaType.TVShow, item.Type);
+            Assert.AreEqual(SearchMediaType.TVShow, item.Type);
             Assert.AreEqual("Arrow", item.Name);
-            Assert.AreEqual("Arrow", item.OriginalName);
-            Assert.AreEqual("/mo0FP1GxOFZT4UDde7RFDz5APXF.jpg", item.PosterPath);
+            Assert.AreEqual("Arrow", item.Title);
             Assert.IsTrue(item.Popularity > 0);
-            Assert.IsTrue(item.VoteAverage > 0);
-            Assert.IsTrue(item.VoteCount > 0);
 
-            Assert.IsNotNull(item.OriginCountry);
-            Assert.AreEqual(2, item.OriginCountry.Count);
-            Assert.IsTrue(item.OriginCountry.Contains("US"));
-            Assert.IsTrue(item.OriginCountry.Contains("CA"));
+            Assert.IsNotNull(item.PosterPath);
+            Assert.IsNotNull(item.BackdropPath);
+
+            foreach (SearchMulti multi in result.Results)
+            {
+                if (multi.Type == SearchMediaType.Movie)
+                    Assert.IsNotNull(multi.AsMovie);
+
+                if (multi.Type == SearchMediaType.TVShow)
+                    Assert.IsNotNull(multi.AsTvShow);
+
+                if (multi.Type == SearchMediaType.Person)
+                    Assert.IsNotNull(multi.AsPerson);
+            }
         }
 
         /// <summary>

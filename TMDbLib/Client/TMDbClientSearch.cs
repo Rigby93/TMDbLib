@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System;
 using RestSharp;
+using RestSharp.Deserializers;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
 using TMDbLib.Utilities;
@@ -26,7 +27,7 @@ namespace TMDbLib.Client
         public async Task<SearchContainer<SearchCompany>> SearchCompany(string query, int page = 0)
         {
             RestRequest req = SearchBuildRequest("company", query, page);
-            
+
             IRestResponse<SearchContainer<SearchCompany>> resp = await _client.ExecuteGetTaskAsync<SearchContainer<SearchCompany>>(req).ConfigureAwait(false);
             return resp.Data;
         }
@@ -108,17 +109,21 @@ namespace TMDbLib.Client
                 req.AddParameter("language", language);
 
             req.AddParameter("include_adult", includeAdult ? "true" : "false");
-            
+
             IRestResponse<SearchContainer<SearchMulti>> resp = await _client.ExecuteGetTaskAsync<SearchContainer<SearchMulti>>(req).ConfigureAwait(false);
+
+            // Do custom parsing
+            CustomDeserialization.DeserializeMultiSearchContent(resp.Data, resp.Content);
+            
             return resp.Data;
         }
 
         public async Task<SearchContainer<SearchPerson>> SearchPerson(string query, int page = 0, bool includeAdult = false, SearchQueryType searchType = SearchQueryType.Undefined)
         {
             RestRequest req = SearchBuildRequest("person", query, page);
-            
+
             req.AddParameter("include_adult", includeAdult ? "true" : "false");
-            
+
             if (searchType != SearchQueryType.Undefined)
                 req.AddParameter("search_type", searchType.GetDescription());
 
@@ -138,7 +143,7 @@ namespace TMDbLib.Client
             language = language ?? DefaultLanguage;
             if (!String.IsNullOrWhiteSpace(language))
                 req.AddParameter("language", language);
-            
+
             if (firstAirDateYear > 0)
                 req.AddParameter("first_air_date_year", firstAirDateYear);
 

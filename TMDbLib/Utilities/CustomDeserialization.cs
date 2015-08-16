@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using RestSharp;
+using RestSharp.Deserializers;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
+using TMDbLib.Objects.Search;
 
 namespace TMDbLib.Utilities
 {
@@ -52,6 +55,39 @@ namespace TMDbLib.Utilities
             {
                 accountState.Rating = Double.Parse(match.Groups["value"].Value,
                     CultureInfo.InvariantCulture.NumberFormat);
+            }
+        }
+
+        public static void DeserializeMultiSearchContent(SearchContainer<SearchMulti> data, string content)
+        {
+            JsonDeserializer deserializer = new JsonDeserializer();
+
+            JsonObject objContainer = SimpleJson.DeserializeObject(content) as JsonObject;
+            JsonArray resultsList = objContainer["results"] as JsonArray;
+
+            for (int i = 0; i < data.Results.Count; i++)
+            {
+                string jsonItem = resultsList[i].ToString();
+                SearchMulti multiItem = data.Results[i];
+
+                if (multiItem.Type == SearchMediaType.TVShow)
+                {
+                    SearchTv asTv = deserializer.Deserialize<SearchTv>(new RestResponse { Content = jsonItem });
+
+                    multiItem.AsTvShow = asTv;
+                }
+                else if (multiItem.Type == SearchMediaType.Movie)
+                {
+                    SearchMovie asMovie = deserializer.Deserialize<SearchMovie>(new RestResponse { Content = jsonItem });
+
+                    multiItem.AsMovie = asMovie;
+                }
+                else if (multiItem.Type == SearchMediaType.Person)
+                {
+                    SearchPerson asPerson = deserializer.Deserialize<SearchPerson>(new RestResponse { Content = jsonItem });
+
+                    multiItem.AsPerson = asPerson;
+                }
             }
         }
     }
